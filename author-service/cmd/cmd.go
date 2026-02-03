@@ -19,7 +19,7 @@ var (
 )
 
 var serverCmd = &cobra.Command{
-	Use:   "server",
+	Use:   "gateway",
 	Short: "Start the author service server",
 	Long:  "Start the author service with gRPC and HTTP gateway servers",
 	Run: func(cmd *cobra.Command, args []string) {

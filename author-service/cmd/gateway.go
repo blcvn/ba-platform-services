@@ -183,14 +183,14 @@ func setupHTTPServer(
 		appLog.Fatalf("failed to register authorization gateway: %v", err)
 	}
 
-	// Mount grpc-gateway on HTTP server
-	httpSrv.HandlePrefix("/", gwmux)
-
 	// Add Prometheus metrics endpoint
 	httpSrv.Route("/").GET(metricsPath, func(ctx http.Context) error {
 		promhttp.Handler().ServeHTTP(ctx.Response(), ctx.Request())
 		return nil
 	})
+
+	// Mount grpc-gateway on HTTP server
+	httpSrv.HandlePrefix("/", gwmux)
 
 	return httpSrv
 }

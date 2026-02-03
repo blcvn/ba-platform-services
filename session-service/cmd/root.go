@@ -28,7 +28,7 @@ var gatewayCmd = &cobra.Command{
 }
 
 func init() {
-	gatewayCmd.Flags().StringVar(&serviceName, "session-service", "session-service", "Name of the service")
+	gatewayCmd.Flags().StringVar(&serviceName, "service-name", "session-service", "Name of the service")
 	gatewayCmd.Flags().StringVar(&jaegerUrl, "jaeger-url", "localhost:4317", "Jaeger OTLP endpoint URL")
 	gatewayCmd.Flags().StringVar(&metricsPath, "metrics-path", "/metrics", "Path for Prometheus metrics endpoint")
 	gatewayCmd.Flags().IntVar(&grpcPort, "grpc-port", 9090, "gRPC server port")

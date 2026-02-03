@@ -118,6 +118,20 @@ func (r *permissionRepository) List(pagination *entities.Pagination) ([]*entitie
 	var permissions []dto.Permission
 	var total int64
 
+	if pagination == nil {
+		pagination = &entities.Pagination{
+			Page:  1,
+			Limit: 10,
+		}
+	} else {
+		if pagination.Page <= 0 {
+			pagination.Page = 1
+		}
+		if pagination.Limit <= 0 {
+			pagination.Limit = 10
+		}
+	}
+
 	query := r.db.Model(&dto.Permission{})
 
 	if err := query.Count(&total).Error; err != nil {

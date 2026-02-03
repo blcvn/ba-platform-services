@@ -1,0 +1,12 @@
+# Session Service Configuration File
+
+# Kong Gateway Headers Configuration
+kong_headers:
+  user_id_header: "X-User-ID"
+  tenant_id_header: "X-Tenant-ID"
+  roles_header: "X-Roles"
+
+# mTLS Configuration
+mtls:
+  cert_path: "/vault/secrets/tls.crt"
+  key_path: "/vault/secrets/tls.key"
