@@ -3,9 +3,9 @@ package controllers
 import (
 	"context"
 
-	pb "github.com/anhdt/erp-protos/go/author"
-	"github.com/anhdt/golang-enterprise-repo/services/author-service/common/errors"
-	"github.com/anhdt/golang-enterprise-repo/services/author-service/entities"
+	"github.com/blcvn/backend/services/author-service/common/errors"
+	"github.com/blcvn/backend/services/author-service/entities"
+	pb "github.com/blcvn/kratos-proto/go/author"
 )
 
 type iUtilities interface {
@@ -38,7 +38,6 @@ type iTransform interface {
 	Model2PbListPermission(source []*entities.Permission) ([]*pb.PermissionPayload, errors.BaseError)
 
 	Model2PbRolePermission(source *entities.RolePermission) (*pb.RolePermissionResponse, errors.BaseError)
-	Model2PbFilterResponse(source *entities.FilterResponse) (*pb.FilterResponse, errors.BaseError)
 	Model2PbPagination(source *entities.Pagination) (*pb.Pagination, errors.BaseError)
 }
 

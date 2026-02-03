@@ -3,9 +3,9 @@ package helper
 import (
 	"fmt"
 
-	pb "github.com/anhdt/erp-protos/go/author"
-	"github.com/anhdt/golang-enterprise-repo/services/author-service/common/errors"
-	"github.com/anhdt/golang-enterprise-repo/services/author-service/entities"
+	"github.com/blcvn/backend/services/author-service/common/errors"
+	"github.com/blcvn/backend/services/author-service/entities"
+	pb "github.com/blcvn/kratos-proto/go/author"
 )
 
 type transform struct{}
@@ -193,19 +193,6 @@ func (t *transform) Model2PbRolePermission(source *entities.RolePermission) (*pb
 				RoleId: source.RoleId,
 			},
 			Permissions: permissions,
-		},
-	}, nil
-}
-
-func (t *transform) Model2PbFilterResponse(source *entities.FilterResponse) (*pb.FilterResponse, errors.BaseError) {
-	code := pb.ResultCode_SUCCESS
-	if !source.Allowed {
-		code = pb.ResultCode_FORBIDDEN
-	}
-	return &pb.FilterResponse{
-		Result: &pb.Result{
-			Code:    code,
-			Message: source.Reason,
 		},
 	}, nil
 }

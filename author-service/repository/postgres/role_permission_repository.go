@@ -5,10 +5,10 @@ import (
 	"fmt"
 	"time"
 
-	"github.com/anhdt/golang-enterprise-repo/services/author-service/common/constants"
-	authErrors "github.com/anhdt/golang-enterprise-repo/services/author-service/common/errors"
-	"github.com/anhdt/golang-enterprise-repo/services/author-service/dto"
-	"github.com/anhdt/golang-enterprise-repo/services/author-service/entities"
+	"github.com/blcvn/backend/services/author-service/common/constants"
+	authErrors "github.com/blcvn/backend/services/author-service/common/errors"
+	"github.com/blcvn/backend/services/author-service/dto"
+	"github.com/blcvn/backend/services/author-service/entities"
 	"github.com/google/uuid"
 	"gorm.io/gorm"
 )

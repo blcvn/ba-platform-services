@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/anhdt/golang-enterprise-repo/services/author-service/cmd"
+	"github.com/blcvn/backend/services/author-service/cmd"
 )
 
 func main() {

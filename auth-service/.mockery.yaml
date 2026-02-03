@@ -1,0 +1,9 @@
+template: testify
+all: true
+dir: '{{.InterfaceDir}}'
+structname: Mock{{firstUpper .InterfaceName}}
+filename: mock.go
+packages:
+   github.com/blcvn/backend/services/auth-service:
+    config:
+      recursive: true

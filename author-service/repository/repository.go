@@ -1,12 +1,12 @@
 package repository
 
 import (
-	"github.com/anhdt/golang-enterprise-repo/services/author-service/common/errors"
-	"github.com/anhdt/golang-enterprise-repo/services/author-service/entities"
+	"github.com/blcvn/backend/services/author-service/common/errors"
+	"github.com/blcvn/backend/services/author-service/entities"
 )
 
 type ITenantRepository interface {
-Create(tenant *entities.Tenant) (*entities.Tenant, errors.BaseError)
+	Create(tenant *entities.Tenant) (*entities.Tenant, errors.BaseError)
 	Update(tenant *entities.Tenant) (*entities.Tenant, errors.BaseError)
 	Delete(id string) errors.BaseError
 	Get(id string) (*entities.Tenant, errors.BaseError)

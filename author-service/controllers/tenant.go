@@ -4,9 +4,9 @@ import (
 	"context"
 	"fmt"
 
-	pb "github.com/anhdt/erp-protos/go/author"
-	"github.com/anhdt/golang-enterprise-repo/services/author-service/common/constants"
-	"github.com/anhdt/golang-enterprise-repo/services/author-service/common/errors"
+	"github.com/blcvn/backend/services/author-service/common/constants"
+	"github.com/blcvn/backend/services/author-service/common/errors"
+	pb "github.com/blcvn/kratos-proto/go/author"
 )
 
 type authorizationController struct {
@@ -470,30 +470,6 @@ func (c *authorizationController) ListPermission(ctx context.Context, req *pb.Li
 		Payload:    permissionsPb,
 		Result:     &pb.Result{Code: pb.ResultCode_SUCCESS, Message: constants.MsgListPermissionSuccess},
 	}, nil
-}
-
-func (c *authorizationController) Filter(ctx context.Context, req *pb.FilterRequest) (*pb.FilterResponse, error) {
-	if err := c.validateRequest(ctx, req.GetMetadata(), req.GetSignature()); err != nil {
-		return &pb.FilterResponse{
-			Result: &pb.Result{Code: pb.ResultCode_BAD_REQUEST, Message: fmt.Sprintf(constants.MsgValidateRequestError, err.Error())},
-		}, nil
-	}
-
-	filter, err := c.transform.Pb2ModelFilterPayload(req.Payload)
-	if err != nil {
-		return &pb.FilterResponse{
-			Result: &pb.Result{Code: pb.ResultCode_BAD_REQUEST, Message: fmt.Sprintf(constants.MsgTransformFilterRequestError, err.Error())},
-		}, nil
-	}
-
-	result, err := c.usecase.Filter(ctx, filter)
-	if err != nil {
-		return &pb.FilterResponse{
-			Result: &pb.Result{Code: pb.ResultCode_INTERNAL, Message: fmt.Sprintf(constants.MsgFilterError, err.Error())},
-		}, nil
-	}
-
-	return c.transform.Model2PbFilterResponse(result)
 }
 
 func (c *authorizationController) AssignPermission(ctx context.Context, req *pb.RolePermissionRequest) (*pb.RolePermissionResponse, error) {

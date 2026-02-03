@@ -1,0 +1,67 @@
+# Auth Service Configuration File
+# This file contains non-sensitive configuration for the auth-service
+# Sensitive data (database credentials, JWT secret, etc.) should be stored in Vault
+
+# Kong Gateway Headers Configuration
+# These headers are used to pass authentication information from Kong to downstream services
+kong_headers:
+  # Header name for user ID
+  # Kong will set this header with the authenticated user's ID
+  user_id_header: "X-User-ID"
+  
+  # Header name for tenant ID
+  # Kong will set this header with the user's tenant ID for multi-tenancy support
+  tenant_id_header: "X-Tenant-ID"
+  
+  # Header name for user roles
+  # Kong will set this header with comma-separated list of user roles
+  roles_header: "X-Roles"
+
+# Role Configuration
+# Configure role names and permissions used in the system
+roles:
+  # Super admin role name
+  # Users with this role can bypass tenant isolation checks and access all resources
+  super_admin_role: "super-admin"
+
+# mTLS Configuration
+# Paths to TLS certificates for mutual TLS authentication
+# These are typically mounted from Vault Agent or Kubernetes secrets
+mtls:
+  # Path to TLS certificate file (PEM format)
+  # Default: /vault/secrets/bundle.pem
+  cert_path: "/vault/secrets/bundle.pem"
+  
+  # Path to TLS private key file (PEM format)
+  # Default: /vault/secrets/bundle.pem
+  key_path: "/vault/secrets/bundle.pem"
+
+# Note: Sensitive configuration is loaded from Vault secrets
+# The following values are loaded from /vault/secrets/config.json (or SECRET_FILE env var):
+# - database.url: PostgreSQL connection string
+# - database.username: Database username (optional, can be in URL)
+# - database.password: Database password (optional, can be in URL)
+# - redis.addr: Redis server address (host:port)
+# - redis.password: Redis password
+# - redis.db: Redis database number
+# - jwt_secret: Secret key for JWT token signing
+
+# Environment Variable Overrides:
+# All values in this file can be overridden by environment variables:
+#
+# Kong Headers:
+#   - KONG_HEADER_USER_ID
+#   - KONG_HEADER_TENANT_ID
+#   - KONG_HEADER_ROLES
+#
+# Roles:
+#   - SUPER_ADMIN_ROLE
+#
+# Secrets (fallback if Vault is unavailable):
+#   - DATABASE_URL
+#   - REDIS_ADDR
+#   - JWT_SECRET
+#
+# Config File Paths:
+#   - CONFIG_FILE: Path to this YAML config file (default: config.yaml)
+#   - SECRET_FILE: Path to Vault secrets JSON file (default: /vault/secrets/config.json)

@@ -1,6 +1,6 @@
 package controllers
 
-import pb "github.com/anhdt/erp-protos/go/author"
+import pb "github.com/blcvn/kratos-proto/go/author"
 
 func buildTenantResponse(meta *pb.Metadata, sig *pb.Signature, code pb.ResultCode, msg string, tenant *pb.TenantPayload) *pb.TenantResponse {
 	return &pb.TenantResponse{

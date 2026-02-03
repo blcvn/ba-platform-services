@@ -1,0 +1,8 @@
+package errors
+
+const (
+	BAD_REQUEST    = 400
+	UNAUTHORIZED   = 401
+	CONFLICT_ERROR = 409
+	INTERNAL_ERROR = 500
+)

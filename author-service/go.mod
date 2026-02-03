@@ -1,16 +1,14 @@
-module github.com/anhdt/golang-enterprise-repo/services/author-service
+module github.com/blcvn/backend/services/author-service
 
 go 1.24.0
 
-replace github.com/anhdt/golang-enterprise-repo/services/pkg => ../pkg
+replace github.com/blcvn/backend/services/pkg => ../pkg
 
-replace github.com/anhdt/erp-protos/go/author => ../../../erp-protos/go/author
-
-replace github.com/anhdt/golang-enterprise-repo/services/auth-service => ../auth-services
+replace github.com/blcvn/backend/services/auth-service => ../auth-services
 
 require (
-	github.com/anhdt/erp-protos/go/author v0.0.0-00010101000000-000000000000
-	github.com/anhdt/golang-enterprise-repo/services/pkg v0.0.0-00010101000000-000000000000
+	github.com/blcvn/backend/services/pkg v0.0.0-00010101000000-000000000000
+	github.com/blcvn/kratos-proto/go/author v1.0.0
 	github.com/go-kratos/kratos/v2 v2.9.2
 	github.com/google/uuid v1.6.0
 	github.com/grpc-ecosystem/grpc-gateway/v2 v2.27.4

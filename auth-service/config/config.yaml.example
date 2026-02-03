@@ -1,0 +1,31 @@
+# Example configuration file for auth-service
+# This file demonstrates how to configure Kong gateway headers and role settings
+
+# Kong Gateway Headers Configuration
+# These headers are used to pass authentication information to downstream services
+kong_headers:
+  # Header name for user ID (default: X-User-ID)
+  user_id_header: "X-User-ID"
+  
+  # Header name for tenant ID (default: X-Tenant-ID)
+  tenant_id_header: "X-Tenant-ID"
+  
+  # Header name for user roles (default: X-Roles)
+  roles_header: "X-Roles"
+
+# Role Configuration
+# Configure role names used in the system
+roles:
+  # Super admin role name (default: super-admin)
+  # Users with this role can bypass tenant isolation checks
+  super_admin_role: "super-admin"
+
+# Note: If these values are not set in this config file, the system will:
+# 1. Try to read from environment variables:
+#    Kong Headers:
+#      - KONG_HEADER_USER_ID
+#      - KONG_HEADER_TENANT_ID
+#      - KONG_HEADER_ROLES
+#    Roles:
+#      - SUPER_ADMIN_ROLE
+# 2. Fall back to default values

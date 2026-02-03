@@ -16,7 +16,7 @@ COPY . .
 RUN cd services/author-service && \
     CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build \
     -ldflags="-w -s" \
-    -o /bin/auth-service ./main.go
+    -o /bin/author-service ./main.go
 
 # Runtime stage
 FROM alpine:latest
@@ -33,13 +33,13 @@ RUN mkdir -p /app/config /vault/secrets && \
     chown -R appuser:appuser /app
 
 # Copy binary from builder
-COPY --from=builder /bin/auth-service /bin/auth-service
+COPY --from=builder /bin/author-service /bin/author-service
 
 # Copy config file from builder
 COPY --from=builder /app/services/author-service/config/config.yaml /app/config/config.yaml
 
 # Set ownership
-RUN chown appuser:appuser /bin/auth-service && \
+RUN chown appuser:appuser /bin/author-service && \
     chown -R appuser:appuser /app/config
 
 # Switch to non-root user

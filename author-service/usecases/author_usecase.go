@@ -3,8 +3,8 @@ package usecases
 import (
 	"context"
 
-	"github.com/anhdt/golang-enterprise-repo/services/author-service/common/errors"
-	"github.com/anhdt/golang-enterprise-repo/services/author-service/entities"
+	"github.com/blcvn/backend/services/author-service/common/errors"
+	"github.com/blcvn/backend/services/author-service/entities"
 )
 
 type AuthorUsecase struct {
