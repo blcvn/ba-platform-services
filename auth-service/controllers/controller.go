@@ -8,6 +8,8 @@ import (
 	"github.com/blcvn/backend/services/auth-service/common/constants"
 	"github.com/blcvn/backend/services/auth-service/common/errors"
 	pb "github.com/blcvn/kratos-proto/go/authen"
+	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/status"
 )
 
 type authenController struct {
@@ -175,6 +177,7 @@ func (c *authenController) LoginWithGoogle(ctx context.Context, req *pb.LoginWit
 		}, nil
 	}
 	tenantId := c.utilities.GetQueryParam(ctx, "tenant_id")
+	fmt.Println("tenantId", tenantId)
 	loginPayload, err := c.transform.Pb2ModelLoginWithGooglePayload(req.GetPayload())
 	if err != nil {
 		return &pb.LoginResponse{
@@ -290,9 +293,17 @@ func (c *authenController) Logout(ctx context.Context, req *pb.AuthenticationReq
 
 // Verify access token (used by Kong / internal services)
 func (c *authenController) VerifyToken(ctx context.Context, req *pb.AuthenticationRequest) (*pb.TokenResponse, error) {
+	fmt.Printf("DEBUG: VerifyToken request received\n")
 	accessToken := c.utilities.GetHeaderKey(ctx, "Authorization")
 	userSession, err := c.usecase.VerifyToken(accessToken)
 	if err != nil {
+		tokenPrefix := "nil"
+		if len(accessToken) > 10 {
+			tokenPrefix = accessToken[:10]
+		} else if len(accessToken) > 0 {
+			tokenPrefix = accessToken
+		}
+		fmt.Printf("DEBUG: VerifyToken FAILED for token prefix %s...: %v\n", tokenPrefix, err)
 		return &pb.TokenResponse{
 			Metadata:  req.Metadata,
 			Signature: req.Signature,
@@ -300,8 +311,10 @@ func (c *authenController) VerifyToken(ctx context.Context, req *pb.Authenticati
 				Code:    pb.ResultCode(err.GetCode()),
 				Message: fmt.Sprintf(constants.MsgVerifyTokenError, err.Error()),
 			},
-		}, nil
+		}, status.Errorf(codes.Unauthenticated, constants.MsgVerifyTokenError, err.Error())
 	}
+
+	fmt.Printf("DEBUG: VerifyToken SUCCESS for UserID=%s TenantID=%s\n", userSession.UserId, userSession.TenantId)
 
 	// Set response headers for Kong gateway
 	// X-User-ID: identity

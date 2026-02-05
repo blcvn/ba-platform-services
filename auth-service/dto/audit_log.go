@@ -23,3 +23,7 @@ type AuthAuditLog struct {
 	CreatedAt    time.Time              `gorm:"autoCreateTime;index"`
 	UpdatedAt    time.Time              `gorm:"autoUpdateTime"`
 }
+
+func (AuthAuditLog) TableName() string {
+	return "audit_logs"
+}

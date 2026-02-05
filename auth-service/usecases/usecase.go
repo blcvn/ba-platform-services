@@ -3,6 +3,7 @@ package usecases
 import (
 	"context"
 	"fmt"
+	"strings"
 	"time"
 
 	"cloud.google.com/go/auth/credentials/idtoken"
@@ -198,8 +199,10 @@ func (u *authUsecase) LoginWithGoogle(ctx context.Context, source *entities.Logi
 	result := helper.AuditResultSuccess
 
 	// 1. Verify Google Token
+	fmt.Printf("DEBUG: Validating Google Token: %s...\n", source.GToken[:10])
 	payload, err := idtoken.Validate(ctx, source.GToken, "")
 	if err != nil {
+		fmt.Printf("DEBUG: Google token validation failed: %v\n", err)
 		result = helper.AuditResultFailure
 		auditLog := u.auditHelper.CreateAuditLogEntry(
 			ctx, tenantUUID, nil, nil,
@@ -213,6 +216,7 @@ func (u *authUsecase) LoginWithGoogle(ctx context.Context, source *entities.Logi
 
 	// 2. Extract user info from Google token
 	email, ok := payload.Claims["email"].(string)
+	fmt.Printf("DEBUG: Google email: %s\n", email)
 	if !ok {
 		return nil, errors.NewBaseError(errors.BAD_REQUEST, fmt.Errorf("email not found in google token"))
 	}
@@ -225,10 +229,11 @@ func (u *authUsecase) LoginWithGoogle(ctx context.Context, source *entities.Logi
 	}
 
 	var user *entities.UserInfo
-
+	fmt.Printf("DEBUG: Finding user by sub: %s\n", sub)
 	// 3. Try to find user by Google ID first (proper OAuth account linking)
 	user, errRepo := u.userRepository.GetByGoogleID(sub)
 	if errRepo != nil {
+		fmt.Printf("DEBUG: User not found by sub, error: %v\n", errRepo)
 		// If not found by Google ID, try to find by email
 		if errRepo.GetCode() == errors.BAD_REQUEST {
 			user, errRepo = u.userRepository.GetByEmail(email)
@@ -463,6 +468,13 @@ func (u *authUsecase) RenewAccessToken(ctx context.Context, accessToken, refresh
 func (u *authUsecase) VerifyToken(accessToken string) (*entities.UserSession, errors.BaseError) {
 	if accessToken == "" {
 		return nil, errors.NewBaseError(errors.UNAUTHORIZED, fmt.Errorf(constants.ErrAccessTokenRequired))
+	}
+
+	// Strip "Bearer " prefix if present
+	if strings.HasPrefix(accessToken, "Bearer ") {
+		accessToken = strings.TrimPrefix(accessToken, "Bearer ")
+	} else if strings.HasPrefix(accessToken, "bearer ") {
+		accessToken = strings.TrimPrefix(accessToken, "bearer ")
 	}
 	// Check if token is blacklisted
 	isBlacklisted, err := u.tokenRepository.IsAccessTokenBlacklisted(accessToken)

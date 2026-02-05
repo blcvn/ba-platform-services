@@ -2,6 +2,7 @@ package helper
 
 import (
 	"context"
+	"fmt"
 	"strings"
 
 	"google.golang.org/grpc"
@@ -17,11 +18,31 @@ func NewUtilities() *utilities {
 
 func (u *utilities) GetHeaderKey(ctx context.Context, key string) string {
 	if md, exists := metadata.FromIncomingContext(ctx); exists {
+		fmt.Printf("DEBUG: Incoming Metadata: %v\n", md)
+		// Try the original key
 		values := md.Get(key)
-		if len(values) == 0 {
-			return ""
+		if len(values) > 0 {
+			fmt.Printf("DEBUG: Found original key '%s': %s\n", key, values[0])
+			return values[0]
 		}
-		return values[0]
+
+		// Try lowercase
+		lowerKey := strings.ToLower(key)
+		values = md.Get(lowerKey)
+		if len(values) > 0 {
+			fmt.Printf("DEBUG: Found lowerKey '%s': %s\n", lowerKey, values[0])
+			return values[0]
+		}
+
+		// Try dash version
+		dashKey := strings.ReplaceAll(lowerKey, "_", "-")
+		values = md.Get(dashKey)
+		if len(values) > 0 {
+			fmt.Printf("DEBUG: Found dashKey '%s': %s\n", dashKey, values[0])
+			return values[0]
+		}
+	} else {
+		fmt.Println("DEBUG: No metadata found in context")
 	}
 	return ""
 }
@@ -39,15 +60,30 @@ func (u *utilities) GetHeaderListString(ctx context.Context, key string) []strin
 // Note: grpc-gateway may convert keys to lowercase
 func (u *utilities) GetQueryParam(ctx context.Context, key string) string {
 	if md, exists := metadata.FromIncomingContext(ctx); exists {
+		// DEBUG: Print all metadata keys to debug missing tenant_id
+		fmt.Printf("DEBUG: Incoming Metadata: %v\n", md)
+
 		// Try the original key first
-		values := md.Get(key)
-		if len(values) > 0 {
-			return values[0]
+		val1 := md.Get(key)
+		fmt.Printf("DEBUG: Lookup key='%s' -> %v\n", key, val1)
+		if len(val1) > 0 {
+			return val1[0]
 		}
+
 		// Try lowercase version (grpc-gateway convention)
-		values = md.Get(strings.ToLower(key))
-		if len(values) > 0 {
-			return values[0]
+		lowerKey := strings.ToLower(key)
+		val2 := md.Get(lowerKey)
+		fmt.Printf("DEBUG: Lookup lowerKey='%s' -> %v\n", lowerKey, val2)
+		if len(val2) > 0 {
+			return val2[0]
+		}
+
+		// Try replacing underscores with dashes (common header convention)
+		dashKey := strings.ReplaceAll(lowerKey, "_", "-")
+		val3 := md.Get(dashKey)
+		fmt.Printf("DEBUG: Lookup dashKey='%s' -> %v\n", dashKey, val3)
+		if len(val3) > 0 {
+			return val3[0]
 		}
 	}
 	return ""

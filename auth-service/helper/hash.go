@@ -63,7 +63,7 @@ func (h *hashUtilities) GenerateOpaqueToken() (string, errors.BaseError) {
 // GenerateAccessToken generates a JWT access token with user ID and session ID
 func (h *hashUtilities) GenerateAccessToken(sessionID string, userInfo *entities.UserInfo) (string, int64, errors.BaseError) {
 	now := time.Now()
-	accessTokenExpiry := now.Add(time.Minute * 15) // 15 minutes
+	accessTokenExpiry := now.Add(time.Minute * 1500) // 15 minutes
 
 	accessToken := jwt.NewWithClaims(jwt.SigningMethodHS256, &Claims{
 		RegisteredClaims: jwt.RegisteredClaims{
@@ -87,7 +87,8 @@ func (h *hashUtilities) GenerateAccessToken(sessionID string, userInfo *entities
 
 // VerifyAccessToken verifies and parses a JWT access token
 func (h *hashUtilities) VerifyAccessToken(tokenString string) (*entities.UserSession, errors.BaseError) {
-	token, parseErr := jwt.Parse(tokenString, func(token *jwt.Token) (interface{}, error) {
+	claims := &Claims{}
+	token, parseErr := jwt.ParseWithClaims(tokenString, claims, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
 			return nil, fmt.Errorf(constants.ErrUnexpectedSigningMethod, token.Header["alg"])
 		}
@@ -95,10 +96,11 @@ func (h *hashUtilities) VerifyAccessToken(tokenString string) (*entities.UserSes
 	})
 
 	if parseErr != nil {
+		fmt.Printf("DEBUG: JWT Parse Error: %v\n", parseErr)
 		return nil, errors.NewBaseError(errors.UNAUTHORIZED, fmt.Errorf(constants.ErrInvalidToken, parseErr))
 	}
 
-	if claims, ok := token.Claims.(Claims); ok && token.Valid {
+	if token.Valid {
 		// Verify token type
 		if claims.Type != "access" {
 			return nil, errors.NewBaseError(errors.UNAUTHORIZED, fmt.Errorf(constants.ErrInvalidTokenType))

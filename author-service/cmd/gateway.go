@@ -5,6 +5,7 @@ import (
 	"crypto/tls"
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/go-kratos/kratos/v2"
 	"github.com/go-kratos/kratos/v2/log"
@@ -176,7 +177,9 @@ func setupHTTPServer(
 	httpSrv := http.NewServer(httpOpts...)
 
 	// Create grpc-gateway mux
-	gwmux := runtime.NewServeMux()
+	gwmux := runtime.NewServeMux(
+		runtime.WithIncomingHeaderMatcher(customMatcher),
+	)
 
 	// Register grpc-gateway handlers
 	if err := pb.RegisterAuthorizationServiceHandlerServer(ctx, gwmux, deps.AuthorCtrl); err != nil {
@@ -193,6 +196,16 @@ func setupHTTPServer(
 	httpSrv.HandlePrefix("/", gwmux)
 
 	return httpSrv
+}
+
+// customMatcher allows specific headers to pass through grpc-gateway
+func customMatcher(key string) (string, bool) {
+	switch strings.ToLower(key) {
+	case "x-user-id", "x-tenant-id", "x-roles", "tenant_id", "tenant-id":
+		return key, true
+	default:
+		return runtime.DefaultHeaderMatcher(key)
+	}
 }
 
 // Server initializes and runs the author service server
