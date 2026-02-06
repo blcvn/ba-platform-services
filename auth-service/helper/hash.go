@@ -63,7 +63,7 @@ func (h *hashUtilities) GenerateOpaqueToken() (string, errors.BaseError) {
 // GenerateAccessToken generates a JWT access token with user ID and session ID
 func (h *hashUtilities) GenerateAccessToken(sessionID string, userInfo *entities.UserInfo) (string, int64, errors.BaseError) {
 	now := time.Now()
-	accessTokenExpiry := now.Add(time.Minute * 1500) // 15 minutes
+	accessTokenExpiry := now.Add(time.Minute * 150000) // 15 minutes
 
 	accessToken := jwt.NewWithClaims(jwt.SigningMethodHS256, &Claims{
 		RegisteredClaims: jwt.RegisteredClaims{
