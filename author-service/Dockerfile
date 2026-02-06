@@ -48,27 +48,26 @@ USER appuser
 # Set working directory
 WORKDIR /app
 
-# Environment variables with defaults
+# Environment variables with defaults (NATIVE PORTS)
 ENV SERVICE_NAME=author-service \
     JAEGER_URL=localhost:4317 \
     METRICS_PATH=/metrics \
-    GRPC_PORT=9091 \
+    GRPC_PORT=9081 \
     HTTP_PORT=8081 \
     CONFIG_FILE=/app/config/config.yaml \
     SECRET_FILE=/vault/secrets/config.json
 
 # Expose ports
-EXPOSE 9091 8081
+EXPOSE 9081 8081
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
     CMD curl -f http://localhost:${HTTP_PORT}/metrics || exit 1
 
-# Run the application with gateway command
+# Run the application
 CMD ["/bin/author-service", "gateway", \
     "--service-name=${SERVICE_NAME}", \
     "--jaeger-url=${JAEGER_URL}", \
     "--metrics-path=${METRICS_PATH}", \
-    "--grpc-port=9091", \
-    "--http-port=8081"]
-
+    "--grpc-port=${GRPC_PORT}", \
+    "--http-port=${HTTP_PORT}"]
