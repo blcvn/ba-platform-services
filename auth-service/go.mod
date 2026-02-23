@@ -2,9 +2,7 @@ module github.com/blcvn/backend/services/auth-service
 
 go 1.24.0
 
-replace github.com/blcvn/backend/services/pkg => ../pkg
-
-require github.com/blcvn/backend/services/pkg v0.0.0-00010101000000-000000000000
+require github.com/blcvn/ba-shared-libs/pkg v0.0.0-00010101000000-000000000000
 
 require (
 	cloud.google.com/go/auth v0.18.1
@@ -82,3 +80,7 @@ require (
 	google.golang.org/protobuf v1.36.11 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
+
+replace github.com/blcvn/ba-shared-libs/pkg => ../../ba-shared-libs/pkg
+
+replace github.com/blcvn/ba-shared-libs/proto => ../../ba-shared-libs/proto

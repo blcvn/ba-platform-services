@@ -18,7 +18,7 @@ import (
 	"github.com/grpc-ecosystem/grpc-gateway/v2/runtime"
 	"github.com/prometheus/client_golang/prometheus/promhttp"
 
-	"github.com/blcvn/backend/services/pkg/mtls"
+	"github.com/blcvn/ba-shared-libs/pkg/mtls"
 	"github.com/blcvn/backend/services/session-service/common/configs"
 	"github.com/blcvn/backend/services/session-service/controllers"
 	"github.com/blcvn/backend/services/session-service/helper"

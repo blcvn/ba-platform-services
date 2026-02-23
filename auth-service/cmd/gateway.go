@@ -25,7 +25,7 @@ import (
 	"github.com/blcvn/backend/services/auth-service/repository/postgres"
 	"github.com/blcvn/backend/services/auth-service/repository/redis"
 	"github.com/blcvn/backend/services/auth-service/usecases"
-	"github.com/blcvn/backend/services/pkg/mtls"
+	"github.com/blcvn/ba-shared-libs/pkg/mtls"
 	pb "github.com/blcvn/kratos-proto/go/authen"
 	gredis "github.com/redis/go-redis/v9"
 

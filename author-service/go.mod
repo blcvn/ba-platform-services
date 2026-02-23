@@ -2,12 +2,10 @@ module github.com/blcvn/backend/services/author-service
 
 go 1.24.0
 
-replace github.com/blcvn/backend/services/pkg => ../pkg
-
 replace github.com/blcvn/backend/services/auth-service => ../auth-services
 
 require (
-	github.com/blcvn/backend/services/pkg v0.0.0-00010101000000-000000000000
+	github.com/blcvn/ba-shared-libs/pkg v0.0.0-00010101000000-000000000000
 	github.com/blcvn/kratos-proto/go/author v1.0.0
 	github.com/go-kratos/kratos/v2 v2.9.2
 	github.com/google/uuid v1.6.0
@@ -69,3 +67,7 @@ require (
 	google.golang.org/protobuf v1.36.11 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
+
+replace github.com/blcvn/ba-shared-libs/pkg => ../../ba-shared-libs/pkg
+
+replace github.com/blcvn/ba-shared-libs/proto => ../../ba-shared-libs/proto

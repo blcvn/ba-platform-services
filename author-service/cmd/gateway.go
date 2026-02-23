@@ -25,7 +25,7 @@ import (
 	"github.com/blcvn/backend/services/author-service/helper"
 	"github.com/blcvn/backend/services/author-service/repository/postgres"
 	"github.com/blcvn/backend/services/author-service/usecases"
-	"github.com/blcvn/backend/services/pkg/mtls"
+	"github.com/blcvn/ba-shared-libs/pkg/mtls"
 	pb "github.com/blcvn/kratos-proto/go/author"
 
 	"go.opentelemetry.io/otel"
